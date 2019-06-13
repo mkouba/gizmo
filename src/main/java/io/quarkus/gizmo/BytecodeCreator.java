@@ -105,10 +105,25 @@ public interface BytecodeCreator extends AutoCloseable {
      *
      * @param descriptor The method descriptor
      * @param object     A {@link ResultHandle} representing the object to invoke on
+     * @param interfaceMethod 
      * @param args       The method parameters
      * @return The method result, or null if a void method
      */
-    ResultHandle invokeSpecialMethod(MethodDescriptor descriptor, ResultHandle object, ResultHandle... args);
+    ResultHandle invokeSpecialMethod(MethodDescriptor descriptor, ResultHandle object, boolean interfaceMethod, ResultHandle... args);
+    
+    /**
+     * Invokes a special method, and returns a {@link ResultHandle} with the result, or null if the method is void.
+     * <p>
+     * Special methods are constructor invocations, or invocations on a superclass method of the current class.
+     *
+     * @param descriptor The method descriptor
+     * @param object     A {@link ResultHandle} representing the object to invoke on
+     * @param args       The method parameters
+     * @return The method result, or null if a void method
+     */
+    default ResultHandle invokeSpecialMethod(MethodDescriptor descriptor, ResultHandle object, ResultHandle... args) {
+        return invokeSpecialMethod(descriptor, object, false, args);
+    }
 
     /**
      * Invokes a special method, and returns a {@link ResultHandle} with the result, or null if the method is void.
@@ -123,7 +138,7 @@ public interface BytecodeCreator extends AutoCloseable {
     default ResultHandle invokeSpecialMethod(MethodInfo descriptor, ResultHandle object, ResultHandle... args) {
         return invokeSpecialMethod(MethodDescriptor.of(descriptor), object, args);
     }
-
+    
     /**
      * Creates a new instance of a given type, by calling the specified constructor, and returns a {@link ResultHandle}
      * representing the result

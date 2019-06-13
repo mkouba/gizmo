@@ -136,17 +136,17 @@ class BytecodeCreatorImpl implements BytecodeCreator {
         operations.add(new InvokeOperation(ret, descriptor, resolve(checkScope(args))));
         return ret;
     }
-
-
+    
     @Override
-    public ResultHandle invokeSpecialMethod(MethodDescriptor descriptor, ResultHandle object, ResultHandle... args) {
+    public ResultHandle invokeSpecialMethod(MethodDescriptor descriptor, ResultHandle object, boolean interfaceMethod,
+            ResultHandle... args) {
         Objects.requireNonNull(descriptor);
         Objects.requireNonNull(object);
         ResultHandle ret = allocateResult(descriptor.getReturnType());
-        operations.add(new InvokeOperation(ret, descriptor, resolve(checkScope(object)), resolve(checkScope(args)), false, true));
+        operations.add(new InvokeOperation(ret, descriptor, resolve(checkScope(object)), resolve(checkScope(args)),
+                interfaceMethod, true));
         return ret;
     }
-
 
     @Override
     public ResultHandle newInstance(MethodDescriptor descriptor, ResultHandle... args) {
@@ -308,7 +308,7 @@ class BytecodeCreatorImpl implements BytecodeCreator {
     @Override
     public ResultHandle loadClass(String className) {
         Objects.requireNonNull(className);
-        Class primtiveType = null;
+        Class<?> primtiveType = null;
         if (className.equals("boolean")) {
             primtiveType = Boolean.class;
         } else if (className.equals("byte")) {
@@ -329,7 +329,7 @@ class BytecodeCreatorImpl implements BytecodeCreator {
         if (primtiveType == null) {
             return new ResultHandle("Ljava/lang/Class;", this, Type.getObjectType(className.replace('.', '/')));
         } else {
-            Class pt = primtiveType;
+            Class<?> pt = primtiveType;
             ResultHandle ret = new ResultHandle("Ljava/lang/Class;", this);
             operations.add(new Operation() {
                 @Override
@@ -1133,10 +1133,10 @@ class BytecodeCreatorImpl implements BytecodeCreator {
             }
             if (staticMethod) {
                 methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC, descriptor.getDeclaringClass(), descriptor.getName(), descriptor.getDescriptor(), false);
+            } else if (specialMethod) {
+                methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, descriptor.getDeclaringClass(), descriptor.getName(), descriptor.getDescriptor(), interfaceMethod);
             } else if (interfaceMethod) {
                 methodVisitor.visitMethodInsn(Opcodes.INVOKEINTERFACE, descriptor.getDeclaringClass(), descriptor.getName(), descriptor.getDescriptor(), true);
-            } else if (specialMethod) {
-                methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL, descriptor.getDeclaringClass(), descriptor.getName(), descriptor.getDescriptor(), false);
             } else {
                 methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, descriptor.getDeclaringClass(), descriptor.getName(), descriptor.getDescriptor(), false);
             }
