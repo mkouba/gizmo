@@ -3,9 +3,11 @@ package io.quarkus.gizmo2;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
+import java.util.function.Consumer;
 
 import io.github.dmlloyd.classfile.Annotation;
 import io.github.dmlloyd.classfile.AnnotationElement;
+import io.quarkus.gizmo2.creator.AnnotationCreator;
 import io.quarkus.gizmo2.impl.Util;
 
 /**
@@ -20,6 +22,16 @@ public interface Annotatable {
      * @param annotation the annotation (must not be {@code null})
      */
     void addAnnotation(RetentionPolicy retention, Annotation annotation);
+
+    default <A extends java.lang.annotation.Annotation> void addAnnotation(Class<A> annClazz, Consumer<AnnotationCreator<A>> builder) {
+        Retention ret = annClazz.getAnnotation(Retention.class);
+        RetentionPolicy retention = ret == null ? RetentionPolicy.CLASS : ret.value();
+        addAnnotation(retention, AnnotationCreator.makeAnnotation(annClazz, builder));
+    }
+
+    default void addAnnotation(Class<? extends java.lang.annotation.Annotation> annClazz) {
+        addAnnotation(annClazz, List.of());
+    }
 
     default void addAnnotation(Class<? extends java.lang.annotation.Annotation> annClazz, List<AnnotationElement> entries) {
         Retention ret = annClazz.getAnnotation(Retention.class);
