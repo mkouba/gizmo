@@ -2,13 +2,11 @@ package io.quarkus.gizmo2.impl;
 
 import java.lang.constant.ClassDesc;
 import java.util.Set;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import io.github.dmlloyd.classfile.ClassBuilder;
 import io.github.dmlloyd.classfile.extras.reflect.AccessFlag;
 import io.quarkus.gizmo2.ConstructorDesc;
-import io.quarkus.gizmo2.Expr;
 import io.quarkus.gizmo2.FieldDesc;
 import io.quarkus.gizmo2.MethodDesc;
 import io.quarkus.gizmo2.creator.AbstractMethodCreator;

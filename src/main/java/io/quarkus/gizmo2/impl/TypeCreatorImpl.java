@@ -1,5 +1,6 @@
 package io.quarkus.gizmo2.impl;
 
+import java.lang.annotation.RetentionPolicy;
 import java.lang.constant.ClassDesc;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import io.github.dmlloyd.classfile.Annotation;
 import io.github.dmlloyd.classfile.ClassBuilder;
 import io.github.dmlloyd.classfile.attribute.SourceFileAttribute;
 import io.github.dmlloyd.classfile.extras.reflect.AccessFlag;
@@ -61,5 +63,9 @@ public abstract sealed class TypeCreatorImpl implements TypeCreator permits Clas
     public StaticFieldVar staticField(final String name, final Consumer<StaticFieldCreator> builder) {
         Objects.requireNonNull(builder, "builder");
         return null;
+    }
+
+    public void addAnnotation(final RetentionPolicy retention, final Annotation annotation) {
+
     }
 }

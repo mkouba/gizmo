@@ -5,11 +5,12 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import io.github.dmlloyd.classfile.extras.reflect.AccessFlag;
+import io.quarkus.gizmo2.Annotatable;
 import io.quarkus.gizmo2.MethodDesc;
 import io.quarkus.gizmo2.StaticFieldVar;
 import io.quarkus.gizmo2.impl.TypeCreatorImpl;
 
-public sealed interface TypeCreator permits ClassCreator, InterfaceCreator, TypeCreatorImpl {
+public sealed interface TypeCreator extends Annotatable permits ClassCreator, InterfaceCreator, TypeCreatorImpl {
     void withFlag(AccessFlag flag);
 
     void withFlags(Set<AccessFlag> flags);
