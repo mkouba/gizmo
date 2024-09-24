@@ -21,21 +21,21 @@ public interface Annotatable {
      * @param retention the retention policy for the annotation (must not be {@code null})
      * @param annotation the annotation (must not be {@code null})
      */
-    void addAnnotation(RetentionPolicy retention, Annotation annotation);
+    void withAnnotation(RetentionPolicy retention, Annotation annotation);
 
-    default <A extends java.lang.annotation.Annotation> void addAnnotation(Class<A> annClazz, Consumer<AnnotationCreator<A>> builder) {
+    default <A extends java.lang.annotation.Annotation> void withAnnotation(Class<A> annClazz, Consumer<AnnotationCreator<A>> builder) {
         Retention ret = annClazz.getAnnotation(Retention.class);
         RetentionPolicy retention = ret == null ? RetentionPolicy.CLASS : ret.value();
-        addAnnotation(retention, AnnotationCreator.makeAnnotation(annClazz, builder));
+        withAnnotation(retention, AnnotationCreator.makeAnnotation(annClazz, builder));
     }
 
-    default void addAnnotation(Class<? extends java.lang.annotation.Annotation> annClazz) {
-        addAnnotation(annClazz, List.of());
+    default void withAnnotation(Class<? extends java.lang.annotation.Annotation> annClazz) {
+        withAnnotation(annClazz, List.of());
     }
 
-    default void addAnnotation(Class<? extends java.lang.annotation.Annotation> annClazz, List<AnnotationElement> entries) {
+    default void withAnnotation(Class<? extends java.lang.annotation.Annotation> annClazz, List<AnnotationElement> entries) {
         Retention ret = annClazz.getAnnotation(Retention.class);
         RetentionPolicy retention = ret == null ? RetentionPolicy.CLASS : ret.value();
-        addAnnotation(retention, Annotation.of(Util.classDesc(annClazz), entries));
+        withAnnotation(retention, Annotation.of(Util.classDesc(annClazz), entries));
     }
 }

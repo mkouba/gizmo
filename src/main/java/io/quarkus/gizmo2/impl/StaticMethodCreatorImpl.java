@@ -116,7 +116,7 @@ public final class StaticMethodCreatorImpl implements StaticMethodCreator {
         return name;
     }
 
-    public void addAnnotation(final RetentionPolicy retention, final Annotation annotation) {
+    public void withAnnotation(final RetentionPolicy retention, final Annotation annotation) {
         switch (retention) {
             case CLASS -> invisible().add(annotation);
             case RUNTIME -> visible().add(annotation);

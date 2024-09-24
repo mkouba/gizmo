@@ -65,7 +65,7 @@ public abstract sealed class TypeCreatorImpl implements TypeCreator permits Clas
         return null;
     }
 
-    public void addAnnotation(final RetentionPolicy retention, final Annotation annotation) {
+    public void withAnnotation(final RetentionPolicy retention, final Annotation annotation) {
 
     }
 }
