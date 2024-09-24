@@ -61,7 +61,7 @@ public final class ClassCreatorImpl extends TypeCreatorImpl implements ClassCrea
         return null;
     }
 
-    public ConstructorDesc constructor(final BiConsumer<ConstructorCreator, Expr> builder) {
+    public ConstructorDesc constructor(final Consumer<ConstructorCreator> builder) {
         return null;
     }
 
