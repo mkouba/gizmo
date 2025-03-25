@@ -1,8 +1,9 @@
 package io.quarkus.gizmo2;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.function.IntSupplier;
+import java.util.function.Supplier;
+import java.util.function.ToIntFunction;
 
 import io.quarkus.gizmo2.desc.ConstructorDesc;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ public class FieldAccessTest {
                 });
             });
         });
-        assertEquals(0, tcm.instanceMethod("test", IntSupplier.class).getAsInt());
+        assertEquals(7, tcm.instanceMethod("test", ToIntFunction.class).applyAsInt(tcm.constructor(Supplier.class).get()));
     }
 
     @Test
@@ -49,6 +50,12 @@ public class FieldAccessTest {
             var bravo = cc.staticField("bravo", fc -> {
                 fc.withType(String.class);
                 fc.withInitial(Constant.of("charlie"));
+            });
+            cc.constructor(mc -> {
+                mc.body(b0 -> {
+                    b0.invokeSpecial(ConstructorDesc.of(Object.class), mc.this_());
+                    b0.return_();
+                });
             });
             cc.method("test", mc -> {
                 // int test() {
@@ -62,7 +69,6 @@ public class FieldAccessTest {
                 });
             });
         });
-        assertEquals(0, tcm.instanceMethod("test", IntSupplier.class).getAsInt());
+        assertEquals(7, tcm.instanceMethod("test", ToIntFunction.class).applyAsInt(tcm.constructor(Supplier.class).get()));
     }
-
 }
