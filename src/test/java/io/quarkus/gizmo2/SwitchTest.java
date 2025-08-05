@@ -164,6 +164,32 @@ public final class SwitchTest {
         assertEquals(3, nameToNumber.get("three"));
         assertEquals(-1, nameToNumber.get("four"));
     }
+    
+    @Test
+    public void testStringSwitchWithoutDefaultCase() {
+        TestClassMaker tcm = new TestClassMaker();
+        Gizmo g = Gizmo.create(tcm);
+        g.class_(ClassDesc.of("io.quarkus.gizmo2.TestStringSwitch"), zc -> {
+            zc.staticMethod("nameToNumber", mc -> {
+                mc.returning(int.class);
+                ParamVar name = mc.parameter("name", String.class);
+                mc.body(b0 -> {
+                    b0.switch_(name, sc -> {
+                        sc.caseOf("zero", b1 -> b1.return_(Const.of(0)));
+                        sc.caseOf("one", b1 -> b1.return_(Const.of(1)));
+                        sc.caseOf("two", b1 -> b1.return_(Const.of(2)));
+                        sc.caseOf("three", b1 -> b1.return_(Const.of(3)));
+                    });
+                });
+            });
+        });
+        NumberParser nameToNumber = tcm.staticMethod("nameToNumber", NumberParser.class);
+        assertEquals(0, nameToNumber.get("zero"));
+        assertEquals(1, nameToNumber.get("one"));
+        assertEquals(2, nameToNumber.get("two"));
+        assertEquals(3, nameToNumber.get("three"));
+        assertEquals(-1, nameToNumber.get("four"));
+    }
 
     public interface NumberParser {
         int get(String name);
